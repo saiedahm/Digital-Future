@@ -62,7 +62,7 @@ module.exports = async function handler(req, res) {
         purchase_units: [{
           reference_id: planId,
           custom_id: planId,
-          description: plan.name + " - Monatszahlung",
+          description: plan.name + " - Einmalzahlung",
           amount: { currency_code: "EUR", value: plan.amount }
         }],
         application_context: {
