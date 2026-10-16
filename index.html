@@ -237,7 +237,21 @@ function detectBrowserLanguage(){
  return 'de';
 }
 function googleLanguageCode(code){return code==='zh-TW'?'zh-TW':code==='zh-CN'?'zh-CN':code}
-function applyGoogleTranslate(code){const combo=document.querySelector('.goog-te-combo');if(!combo){window.__pendingGoogleLanguage=code;return}combo.value=googleLanguageCode(code);combo.dispatchEvent(new Event('change'));window.__pendingGoogleLanguage=''}
+function applyGoogleTranslate(code){
+ const target=googleLanguageCode(code);
+ const apply=()=>{
+  const combo=document.querySelector('.goog-te-combo');
+  if(!combo){window.__pendingGoogleLanguage=code;return false}
+  combo.value=target;
+  combo.dispatchEvent(new Event('change',{bubbles:true}));
+  window.__pendingGoogleLanguage='';
+  return true;
+ };
+ if(apply())return;
+ let attempts=0;
+ const retry=()=>{if(apply()||++attempts>=20)return;window.setTimeout(retry,250)};
+ window.setTimeout(retry,250);
+}
 function setLanguage(next){
  lang=next;
  const rtlLanguages=['ar','fa','ur','he','ps','sd','ug','yi'];
